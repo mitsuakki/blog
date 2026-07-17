@@ -1,0 +1,46 @@
+# Reverse-engineering blog. GitHub Pages + Jekyll
+title: bits & bytes
+tagline: software & reverse engineering notes
+description: >-
+  Notes on reverse engineering, deobfuscation, OS internals,
+  and tooling. By Alexis M. Daugé.
+
+url: ""
+baseurl: ""
+author:
+  name: Alexis M. Daugé
+  github: mitsuakki
+  linkedin: alexis-dauge
+
+# Build
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+permalink: /:title/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: post
+  - scope:
+      path: ""
+    values:
+      layout: default
+
+# Exclude from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor/
+
+# GitHub Pages gems
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
