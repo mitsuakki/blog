@@ -18,19 +18,6 @@
       <a href="{{ '/about/' | relative_url }}">~/about</a>
       <a href="{{ '/feed.xml' | relative_url }}">~/rss</a>
       <a href="https://github.com/mitsuakki">~/github</a>
-      <span class="nav-sep">|</span>
-      {% if page.lang == "fr" %}
-        <a href="{{ page.url | replace: '/fr/', '/' | relative_url }}" title="English version">en</a>
-      {% else %}
-        {% assign fr_url = page.url | replace_first: '/', '/fr/' %}
-        {% if page.url == '/' %}
-          <a href="{{ '/fr/' | relative_url }}" title="Version française">fr</a>
-        {% elsif page.url == '/about/' %}
-          <a href="{{ '/fr/a-propos/' | relative_url }}" title="Version française">fr</a>
-        {% else %}
-          <a href="{{ '/fr/' | relative_url }}" title="Version française">fr</a>
-        {% endif %}
-      {% endif %}
     </nav>
     <main>
       {{ content }}

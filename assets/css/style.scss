@@ -1,7 +1,7 @@
 ---
 ---
 /* ==========================================================================
-   bits & bytes. terminal-pro theme
+   blog de mitsuakki. terminal-pro theme
    Reverse engineering blog by Alexis M. Daugé (@mitsuakki)
 
    Dark. Monospace-heavy. Code-first. No JS. No trackers.
@@ -149,27 +149,46 @@ body {
   outline: none;
 }
 
-.top-nav .nav-sep {
-  color: var(--border);
-  user-select: none;
-}
-
 /* --- Site Header ----------------------------------------------- */
 .site-header {
   margin-bottom: 3rem;
   padding: 1rem 0;
 }
 
-.ascii-logo {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  line-height: 1.25;
-  color: var(--accent);
-  margin-bottom: 0.75rem;
-  overflow-x: auto;
-  white-space: pre;
-  text-shadow: 0 0 8px rgba(88, 166, 255, 0.25);
+/* --- Profile Block (avatar + text) ----------------------------- */
+.profile-block {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  margin-bottom: 1rem;
 }
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  image-rendering: auto;
+}
+
+.profile-text {
+  min-width: 0;
+}
+
+.profile-text h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.3rem;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.profile-text h1 + p {
+  margin-bottom: 0;
+  color: var(--fg-dim);
+  font-size: 0.9rem;
+}
+
 
 .tagline {
   color: var(--fg-dim);
@@ -406,29 +425,6 @@ dd {
   font-size: 0.9rem;
 }
 
-/* Task lists (GFM) */
-ul.task-list {
-  list-style: none;
-  margin-left: 0;
-}
-
-ul.task-list li {
-  position: relative;
-  padding-left: 1.5em;
-}
-
-ul.task-list li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.3em;
-  width: 1em;
-  height: 1em;
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  background: var(--bg-highlight);
-}
-
 /* --- Blockquotes ----------------------------------------------- */
 blockquote {
   border-left: 3px solid var(--accent);
@@ -446,31 +442,6 @@ blockquote p:last-child {
 
 blockquote strong {
   color: var(--fg);
-}
-
-/* Callout variants: use blockquote with marker in first line */
-blockquote.note,
-blockquote.info {
-  border-left-color: var(--accent);
-  background: rgba(88, 166, 255, 0.06);
-}
-
-blockquote.warning,
-blockquote.warn {
-  border-left-color: var(--yellow);
-  background: rgba(210, 153, 29, 0.06);
-}
-
-blockquote.danger,
-blockquote.error {
-  border-left-color: var(--red);
-  background: rgba(248, 81, 73, 0.06);
-}
-
-blockquote.success,
-blockquote.tip {
-  border-left-color: var(--green);
-  background: rgba(63, 185, 80, 0.06);
 }
 
 /* --- Code ------------------------------------------------------ */
@@ -499,6 +470,7 @@ pre {
   line-height: 1.55;
   tab-size: 4;
   -moz-tab-size: 4;
+  text-align: left;
 }
 
 pre code {
@@ -538,42 +510,6 @@ pre[data-lang]::before {
   border-radius: var(--radius) var(--radius) 0 0;
 }
 
-/* Terminal / shell blocks */
-pre.shell,
-pre.terminal {
-  background: #0a0a0a;
-  border-color: #2a2a2a;
-  color: var(--green);
-}
-
-pre.shell code,
-pre.terminal code {
-  color: var(--green);
-}
-
-/* Hexdump block */
-pre.hexdump {
-  font-size: 0.78rem;
-  line-height: 1.4;
-  background: #0a0a0f;
-  border-color: var(--border);
-}
-
-pre.hexdump code {
-  color: var(--cyan);
-}
-
-/* Diff block */
-pre.diff-add {
-  background: rgba(63, 185, 80, 0.08);
-  border-left: 3px solid var(--green);
-}
-
-pre.diff-remove {
-  background: rgba(248, 81, 73, 0.08);
-  border-left: 3px solid var(--red);
-}
-
 /* --- Inline semantic ------------------------------------------- */
 /* Keyboard */
 kbd {
@@ -587,23 +523,6 @@ kbd {
   color: var(--fg-dim);
   box-shadow: 0 1px 0 var(--border);
   white-space: nowrap;
-}
-
-/* File path */
-.filepath {
-  font-family: var(--font-mono);
-  font-size: 0.9em;
-  color: var(--fg-dim);
-  background: var(--bg-alt);
-  padding: 0.1em 0.4em;
-  border-radius: 3px;
-  border: 1px solid var(--border-light);
-  white-space: nowrap;
-}
-
-.filepath::before {
-  content: "📄 ";
-  font-size: 0.8em;
 }
 
 /* --- Tables ---------------------------------------------------- */
@@ -649,14 +568,6 @@ hr {
   border: none;
   border-top: 1px solid var(--border);
   margin: 2.5rem 0;
-}
-
-hr.dashed {
-  border-top-style: dashed;
-}
-
-hr.faint {
-  border-top-color: var(--border-light);
 }
 
 /* --- Images & Figures ------------------------------------------ */
@@ -804,89 +715,6 @@ a.tag:hover {
   text-align: right;
 }
 
-/* --- Post Series (multi-part) ---------------------------------- */
-.post-series {
-  margin: 1.5rem 0;
-  padding: 1rem;
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-
-.post-series h4 {
-  margin-top: 0;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--purple);
-}
-
-.post-series ol {
-  margin: 0.5rem 0 0 1.2rem;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-}
-
-.post-series li {
-  margin-bottom: 0.3rem;
-}
-
-.post-series li.current {
-  font-weight: 600;
-  color: var(--fg);
-}
-
-.post-series li.current::marker {
-  color: var(--purple);
-}
-
-/* --- Table of Contents ----------------------------------------- */
-.toc {
-  margin: 1.5rem 0;
-  padding: 1rem 1.15rem;
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-
-.toc-title {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--fg-dim);
-  margin-bottom: 0.5rem;
-}
-
-.toc ol,
-.toc ul {
-  list-style: none;
-  margin: 0;
-}
-
-.toc li {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  margin-bottom: 0.2rem;
-  padding: 0.15rem 0;
-}
-
-.toc a {
-  color: var(--fg-dim);
-  text-decoration: none;
-}
-
-.toc a:hover {
-  color: var(--accent);
-}
-
-.toc ol ol,
-.toc ul ul {
-  padding-left: 1.2rem;
-  font-size: 0.95em;
-}
-
 /* --- Status Badges --------------------------------------------- */
 .badge {
   display: inline-block;
@@ -906,112 +734,11 @@ a.tag:hover {
 .badge-blue   { background: rgba(88, 166, 255, 0.15);  color: var(--accent); }
 .badge-purple { background: rgba(163, 113, 247, 0.15); color: var(--purple); }
 
-/* --- Progress / Meter ------------------------------------------ */
-.meter {
-  width: 100%;
-  height: 6px;
-  background: var(--bg-highlight);
-  border-radius: 3px;
-  overflow: hidden;
-  margin: 0.5rem 0;
-}
-
-.meter-bar {
-  height: 100%;
-  background: var(--accent);
-  border-radius: 3px;
-  transition: width 0.4s ease;
-}
-
 /* --- Terminal Prompt ------------------------------------------- */
 .prompt {
   color: var(--green);
   font-family: var(--font-mono);
   user-select: none;
-}
-
-.prompt-root {
-  color: var(--red);
-}
-
-.prompt-user {
-  color: var(--green);
-}
-
-/* --- File Tree ------------------------------------------------- */
-.file-tree {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  line-height: 1.7;
-  color: var(--fg-dim);
-  margin: 1rem 0;
-  white-space: pre;
-}
-
-.file-tree .dir {
-  color: var(--accent);
-}
-
-.file-tree .file {
-  color: var(--fg-dim);
-}
-
-.file-tree .comment {
-  color: var(--fg-muted);
-}
-
-/* --- Changelog ------------------------------------------------- */
-.changelog-entry {
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--border-light);
-  display: flex;
-  gap: 0.75rem;
-  font-size: 0.9rem;
-}
-
-.changelog-entry:last-child {
-  border-bottom: none;
-}
-
-.changelog-version {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  min-width: 5rem;
-  color: var(--accent);
-  font-size: 0.8rem;
-  padding-top: 0.15rem;
-}
-
-/* --- Archive Page ---------------------------------------------- */
-.archive-year {
-  font-family: var(--font-mono);
-  font-size: 1.2rem;
-  color: var(--fg);
-  margin: 2rem 0 0.5rem;
-}
-
-.archive-year:first-child {
-  margin-top: 0;
-}
-
-.archive-list {
-  list-style: none;
-  margin: 0 0 0.5rem;
-  border-left: 2px solid var(--border);
-  padding-left: 1rem;
-}
-
-.archive-list li {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  padding: 0.3rem 0;
-}
-
-.archive-list .archive-date {
-  color: var(--fg-muted);
-  font-size: 0.78rem;
-  min-width: 3rem;
-  display: inline-block;
 }
 
 /* --- Footer ---------------------------------------------------- */
@@ -1101,8 +828,16 @@ footer a:hover {
     padding: 1rem;
   }
 
-  .ascii-logo {
-    font-size: 0.5rem;
+
+  .profile-block {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .profile-avatar {
+    width: 56px;
+    height: 56px;
   }
 
   .top-nav {
@@ -1177,9 +912,6 @@ footer a:hover {
 }
 
 @media (max-width: 420px) {
-  .ascii-logo {
-    display: none;
-  }
 
   .post-meta {
     flex-direction: column;
@@ -1197,14 +929,6 @@ footer a:hover {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-/* --- Dark Mode Only (default) ---------------------------------- */
-/* Theme is dark-only by design. If someone forces light mode, adapt: */
-@media (prefers-color-scheme: light) {
-  /* Override nothing. We stay dark. This block exists so browsers
-     with aggressive light-mode forcing don't wash out the theme.
-     If you see light backgrounds, your browser is overriding. */
 }
 
 /* ==========================================================================

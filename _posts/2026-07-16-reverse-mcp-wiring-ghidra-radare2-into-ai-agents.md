@@ -6,14 +6,13 @@ lang: en
 ---
 
 I got tired of switching windows. Disassemble in one terminal, decompile in
-another, grep cross references somewhere else, then shell out to run `strings`
-or `checksec` or whatever. Each tool has its own CLI, its own output format,
-its own annoyances.
+another, grep xrefs somewhere else, then shell out for `strings` or `checksec`.
+Every tool has its own CLI, its own output format, its own annoyances.
 
 So I built [reverse-mcp](https://github.com/mitsuakki/reverse-mcp). One Docker
-container. Ghidra, radare2, angr, and a full shell. All exposed as MCP servers
-behind a single HTTP endpoint. Claude Code connects to it and suddenly every RE
-tool is one function call away.
+container. Ghidra, radare2, angr, and a shell. All exposed as MCP servers behind
+a single HTTP endpoint. Claude Code connects, and every RE tool is one function
+call away.
 
 ## How it works
 
@@ -34,29 +33,27 @@ tool is one function call away.
 
 ### The gateway
 
-A Python script, `gateway.py`, listens on port 3100. It spawns each MCP
-back-end as a child process, then composites their tools into one namespace.
+`gateway.py`, port 3100. Spawns each MCP back-end as a child process,
+composites their tools into one namespace. Each back-end gets a prefix:
 
-Each back-end gets a prefix so tools never collide:
-
-| Prefix | Back-end | What it gives you |
-|--------|----------|-------------------|
-| `r2__` | radare2 (r2mcp) | disassemble, decompile with r2ghidra, hexdump, xrefs, emulation |
-| `ghidra__` | Ghidra headless on :8089 | project management, import, auto-analysis, 200+ tools including decompiler, patcher, BinDiff, debugger |
-| `shell__` | shell-mcp | any command: strings, checksec, ent, gdb, lldb, apktool, whatever |
+| Prefix | Back-end | What you get |
+|--------|----------|--------------|
+| `r2__` | radare2 (r2mcp) | disassemble, decompile (r2ghidra), hexdump, xrefs, emulation |
+| `ghidra__` | Ghidra headless :8089 | project management, import, auto-analysis, 200+ tools: decompiler, patcher, BinDiff, debugger |
+| `shell__` | shell-mcp | anything: strings, checksec, ent, gdb, lldb, apktool, whatever |
 | `angr__` | angr MCP | CFG, symbolic execution, VFG, dependency analysis |
 
-If a back-end fails to start, the gateway logs it and keeps running. The tools
-from that back-end just don't show up in the client. No crash cascade.
+If a back-end dies, the gateway logs it and keeps running. Tools from that
+back-end just don't appear. No cascading failure.
 
-### The Ghidra thing
+### The Ghidra situation
 
-Ghidra tools are split in two groups. Static tools (import_file, list_instances,
-create_project) are always there. Instance tools (decompile, rename, xrefs,
-patch) only appear after you load a program into a Ghidra instance.
+Ghidra tools are split in two. Static tools (`import_file`, `list_instances`,
+`create_project`) are always available. Instance tools (`decompile`, `rename`,
+`xrefs`, `patch`) only show up after you load a program.
 
-The flow goes: import a file, auto connect, the gateway fetches the instance
-schema, then all 200+ tools unlock. It's a bit clunky but it works.
+Flow: import file → auto-connect → gateway fetches the instance schema →
+200+ tools unlock. A bit clunky but it holds together.
 
 ## Getting started
 
@@ -67,10 +64,10 @@ docker compose build
 docker compose up -d
 ```
 
-Throw binaries in `./workspace/`. They show up at `/workspace` inside the
+Drop binaries in `./workspace/`. They show up at `/workspace` inside the
 container.
 
-MCP client config for Claude Code:
+MCP client config:
 
 ```json
 {
@@ -83,54 +80,50 @@ MCP client config for Claude Code:
 }
 ```
 
-## The agents I ship with it
+## Agents
 
-Five specialized Claude Code agents sit in `.claude/agents/`. Each one does
-one thing:
+Five Claude Code agents in `.claude/agents/`. Each does one thing:
 
 | Agent | Model | Role |
 |-------|-------|------|
-| `binary-triage` | Haiku | First look: radare2 and shell recon, fast and cheap |
-| `ghidra-importer` | Sonnet | Import into Ghidra, run auto-analysis |
-| `ghidra-analyst` | Sonnet | Static RE: decompile, follow xrefs, rename things |
-| `ghidra-debugger` | Sonnet | Dynamic: attach debugger, set breakpoints, trace |
-| `re-orchestrator` | Opus | Runs the whole pipeline, triage to final report |
+| `binary-triage` | Haiku | Fast surface recon: radare2 + shell |
+| `ghidra-importer` | Sonnet | Import into Ghidra, auto-analysis |
+| `ghidra-analyst` | Sonnet | Static RE: decompile, xrefs, rename |
+| `ghidra-debugger` | Sonnet | Dynamic: attach, breakpoints, trace |
+| `re-orchestrator` | Opus | Runs the whole pipeline, triage → report |
 
-The orchestrator chains them. Triage fires first for surface assessment. If
-the binary looks interesting, it hands off to the Ghidra pipeline. I wrote
-it this way because sometimes you just want a quick look and don't need the
-full heavyweight analysis.
+The orchestrator chains them. Triage first for a quick surface look. If the
+binary seems interesting, it hands off to Ghidra. Sometimes you just want a
+fast answer and don't need the heavyweight pipeline.
 
 ## What's inside
 
-Everything lives in the container. No GUI, no VNC. Terminal or MCP only.
+Everything in the container. No GUI, no VNC. Terminal or MCP only.
 
-radare2 with r2ghidra decompiler. Ghidra headless plus analyzeHeadless and a
-load-ghidra.sh helper. BinDiff CLI. angr, pwntools, ropper, ROPgadget,
-capstone, unicorn, keystone, z3, LIEF, r2pipe. For fuzzing: AFL++ with QEMU
-mode, honggfuzz. For Android: apktool, jadx, Frida, objection. Standard stuff:
-gdb, lldb, strace, ltrace, nasm, objdump, patchelf, gcc, clang.
+radare2 + r2ghidra decompiler. Ghidra headless + analyzeHeadless + a helper
+script. BinDiff CLI. angr, pwntools, ropper, ROPgadget, capstone, unicorn,
+keystone, z3, LIEF, r2pipe. Fuzzing: AFL++ with QEMU mode, honggfuzz.
+Android: apktool, jadx, Frida, objection. Standard: gdb, lldb, strace,
+ltrace, nasm, objdump, patchelf, gcc, clang.
 
-Basically everything I use day to day, containerized.
+Basically everything I use day to day, containerized so I don't have to think
+about dependencies.
 
-## Security note
+## Security
 
-No authentication on the gateway. It's a local dev tool, not something you
-expose to the internet. Run untrusted binaries in a VM. The docker compose
-file adds `SYS_PTRACE` and drops seccomp for gdb and AFL.
+No auth on the gateway. Local dev tool, don't expose it. Run untrusted
+binaries in a VM. The compose file adds `SYS_PTRACE` and drops seccomp
+for gdb/AFL to work.
 
-## Builds
+## CI
 
-GitHub Actions CI on push and PR. Tagged versions push images to GHCR.
-MIT license, do whatever you want with it.
+GitHub Actions on push and PR. Tagged versions push to GHCR. MIT license.
 
 ## Next
 
-I want to add a Binary Ninja MCP bridge using BN's headless mode. And maybe
-a Frida bridge for mobile RE. And a way to import Ghidra CFGs into angr for
-hybrid analysis.
+Binary Ninja MCP bridge using BN headless mode. Frida bridge for mobile RE.
+Import Ghidra CFGs into angr for hybrid analysis.
 
-I'll write up how to build a custom MCP server for an RE tool soon. The
-pattern is simple: subprocess the tool, parse output, expose as typed MCP
-tools with JSON schemas. Under 200 lines of Python for a basic disassembler
-bridge.
+I'll write up how to build a custom MCP server for an RE tool. The pattern
+is simple: subprocess the tool, parse output, expose as typed MCP tools with
+JSON schemas. Under 200 lines of Python for a basic disassembler bridge.

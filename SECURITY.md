@@ -5,8 +5,7 @@
 If you find a security issue in this blog's tooling, CI/CD, or infrastructure,
 do **not** open a public issue.
 
-Email: **alexis.dauge@proton.me**
-
+Email: **alexis.dauge@ensc.fr**
 PGP key: [github.com/mitsuakki.gpg](https://github.com/mitsuakki.gpg)
 
 Expect a response within 48 hours. Please give me reasonable time to fix before

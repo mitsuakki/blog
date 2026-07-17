@@ -1,6 +1,6 @@
 # Reverse-engineering blog. GitHub Pages + Jekyll
-title: bits & bytes
-tagline: software & reverse engineering notes
+title: blog de mitsuakki
+tagline: reverse engineering & low-level dev
 description: >-
   Notes on reverse engineering, deobfuscation, OS internals,
   and tooling. By Alexis M. Daugé.

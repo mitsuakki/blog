@@ -5,27 +5,28 @@ tags: [binaryninja, c++, deobfuscation, plugin-dev, deobfninja]
 lang: en
 ---
 
-Binary Ninja's C++ API is kind of a hidden gem. Everyone uses the Python API
-because it's easy. But when you're doing deobfuscation, iterating over every
-instruction in a function, pattern matching against obfuscator signatures,
-rewriting IL... Python just dies. Especially on real binaries.
+Binary Ninja's C++ API is kind of a hidden gem. Everyone defaults to Python
+because it's easy. But deobfuscation means iterating over every instruction
+in a function, pattern matching against obfuscator signatures, rewriting IL.
+Python just dies. Especially on real binaries.
 
-So I started [deobfninja](https://github.com/mitsuakki/deobfninja) in C++.
-Here is what I learned.
+So I wrote [deobfninja](https://github.com/mitsuakki/deobfninja) in C++.
 
 ## Why not Python
 
-Look, the Python API is great for quick scripts. I still use it for one-off
-analysis. But deobfuscation is one of those problems where you feel every
-millisecond of interpreter overhead.
+The Python API is fine for quick scripts. I still use it for one-off analysis.
+But deobfuscation is one of those problems where you feel every millisecond
+of interpreter overhead.
 
-In C++ you get direct access to BN's IL. No GIL, so you can parallelize across
-functions. Zero copy buffer manipulation for pattern matching. On a 5 MB
-binary with moderate obfuscation, the C++ plugin runs in under a second.
-The Python equivalent took 42 seconds. That's not an optimization, it's the
-difference between "usable" and "I'll go make coffee".
+C++ gives you direct access to BN's IL. No GIL, so you parallelize across
+functions. Zero-copy buffer manipulation for pattern matching. On a 5 MB binary
+with moderate obfuscation, the C++ plugin runs in under a second. The Python
+equivalent took 42 seconds.
 
-## The plugin architecture
+That's not an optimization. That's the difference between "usable" and
+"I'm going to make coffee while this runs."
+
+## Architecture
 
 ```
 ┌──────────────────────────────────┐
@@ -51,8 +52,8 @@ difference between "usable" and "I'll go make coffee".
 ### Pattern matching on MLIL
 
 I work on BN's Medium Level IL, not raw assembly. MLIL is high enough that
-patterns are recognizable across compiler versions, but low enough that
-obfuscator tricks still show up clearly.
+patterns survive across compiler versions, but low enough that obfuscator
+tricks don't get optimized away.
 
 Each obfuscation technique registers as a detector:
 
@@ -68,19 +69,18 @@ public:
 {% endhighlight %}
 
 All detectors get chained. Every function gets piped through every detector.
-When something matches, the rewriter replaces the obfuscated IL nodes with
-clean ones. It's simple, but composing detectors is where the power is.
+Match → rewrite → next. Dead simple, but composing detectors is where
+the interesting stuff happens.
 
-### Spotting control flow flattening
+### Control flow flattening
 
-CFG flattening is the thing I run into most. The obfuscator takes a normal
-function and turns it into a state machine: every basic block updates a state
-variable, then jumps to a central dispatcher. The original logic is still
-there, but the structure is gone.
+CFG flattening is everywhere. The obfuscator turns a normal function into a
+state machine: each basic block updates a state variable, jumps to a central
+dispatcher. Original logic is still there, structure is gone.
 
-My detector looks for three things:
+My detector looks for three signals:
 
-1. A loop containing a switch or dispatcher block with high in-degree
+1. A loop containing a dispatcher block with abnormally high in-degree
 2. A state variable updated before each indirect jump
 3. All original basic blocks present as switch cases, just scattered
 
@@ -100,16 +100,15 @@ bool CFFDetector::match(mlil_inst inst) {
 }
 {% endhighlight %}
 
-The fun part is `traceStateVariable`. You have to follow the state value
-backwards through phi nodes, which is a bit of a maze when the obfuscator
-deliberately inserts extra assignments. I use a simple use-def chain walk,
-stopping when I hit a constant or a function argument.
+`traceStateVariable` is the fun part. You follow the state value backwards
+through phi nodes, which gets messy when the obfuscator sprinkles in fake
+assignments. I do a simple use-def walk, bail when I hit a constant or
+function argument. Works most of the time.
 
-### Recipes: users need configurability
+### Recipes
 
-Not all obfuscation fits a template. Some people run into custom protectors.
-So I added a recipe system: JSON configs that describe a deobfuscation pass.
-No recompilation needed.
+Not everything fits a template. Some people hit custom protectors. So there's
+a recipe system: JSON files describing a deobfuscation pass. No recompilation.
 
 ```json
 {
@@ -121,14 +120,14 @@ No recompilation needed.
 }
 ```
 
-The engine runs up to `max_iterations` passes. Some transforms only work after
-a previous layer gets peeled. You do MBA simplification before CFF untangling
-and the output is garbage. Order matters, a lot.
+The engine runs up to `max_iterations` passes. Some transforms only make sense
+after a previous layer gets peeled. Run MBA simplification before CFF untangling
+and the output is garbage. Order matters a lot.
 
 ## Build setup
 
-CMake + Ninja. Binary Ninja API vendored as a git submodule, pinned to a
-specific revision because the API changes between BN versions.
+CMake + Ninja. BN API vendored as a git submodule, pinned to a specific
+revision. The API changes between BN versions and I learned this the hard way.
 
 ```bash
 git clone https://github.com/mitsuakki/deobfninja
@@ -139,11 +138,11 @@ cmake --build build
 cmake --install build
 ```
 
-`$BN_INSTALL_DIR` points to your Binary Ninja install path.
+`$BN_INSTALL_DIR` points to your BN install.
 
 ## Numbers
 
-Tested on a ~5 MB obfuscated binary, 12-core machine:
+5 MB obfuscated binary, 12-core machine:
 
 | Approach | Time | Memory |
 |----------|------|--------|
@@ -151,22 +150,22 @@ Tested on a ~5 MB obfuscated binary, 12-core machine:
 | C++ single thread | 3.1s | 180 MB |
 | C++ parallel | 0.8s | 240 MB |
 
-Parallelism adds roughly 4x on top of the C++ baseline. Not bad.
+~4× from parallelization on top of the C++ baseline. I'll take it.
 
-## Things that bit me
+## Things that broke
 
-BN's IL changes between versions. Pin your submodule. Seriously.
+BN's IL changes between versions. Pin your submodule. I'm serious.
 
-MLIL lifting can fail on heavily obfuscated code. Always check
-`mlil_inst.operation` before casting. I spent an evening debugging a
-segfault that turned out to be a `null` operation node.
+MLIL lifting fails sometimes on heavily obfuscated code. Always check
+`mlil_inst.operation` before casting. I lost an evening to a segfault
+that was just a null operation node.
 
-Recipe ordering is not smart. It won't warn you if your passes conflict.
-You learn by watching the output get worse.
+Recipe ordering isn't smart. It won't warn you if two passes conflict.
+You notice when the output gets worse instead of better.
 
-## What's next
+## What's missing
 
-I want to add more detectors: opaque predicate patterns, MBA simplification
-passes, maybe a generic pattern language so people can write detection rules
-without touching C++. The `tests/` directory has sample binaries if you want
-to play with it. PRs welcome, or just open an issue if something breaks.
+More detectors: opaque predicate patterns, MBA simplification passes.
+Maybe a pattern DSL so people can write detection rules without touching C++.
+The `tests/` directory has sample binaries. PRs welcome, or open an issue
+if something breaks.
