@@ -5,8 +5,8 @@ description: >-
   Notes on reverse engineering, deobfuscation, OS internals,
   and tooling. By Alexis M. Daugé.
 
-url: ""
-baseurl: ""
+url: "https://mitsuakki.github.io"
+baseurl: "/blog"
 author:
   name: Alexis M. Daugé
   github: mitsuakki
