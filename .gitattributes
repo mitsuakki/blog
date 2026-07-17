@@ -34,9 +34,11 @@
 *.bash    text eol=lf diff=shell
 
 # Ruby
-Gemfile       text linguist-language=Ruby
-Gemfile.lock  text linguist-language=Ruby
-*.rb          text diff=ruby linguist-language=Ruby
+* linguist-detectable=false
+
+*.rb          linguist-detectable=true linguist-language=Ruby
+Gemfile       linguist-detectable=true linguist-language=Ruby
+Gemfile.lock  linguist-detectable=true linguist-language=Ruby
 
 # Jekyll
 _config.yml text
