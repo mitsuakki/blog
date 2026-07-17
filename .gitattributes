@@ -33,8 +33,10 @@
 *.sh      text eol=lf diff=shell
 *.bash    text eol=lf diff=shell
 
-# Lockfile
-Gemfile.lock text
+# Ruby
+Gemfile       text linguist-language=Ruby
+Gemfile.lock  text linguist-language=Ruby
+*.rb          text diff=ruby linguist-language=Ruby
 
 # Jekyll
 _config.yml text
