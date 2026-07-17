@@ -1,0 +1,6 @@
+# Code ownership — @mitsuakki reviews everything
+* @mitsuakki
+
+# CI/CD and security configs require explicit review
+/.github/  @mitsuakki
+/SECURITY.md @mitsuakki

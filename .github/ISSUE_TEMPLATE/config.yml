@@ -1,0 +1,9 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: Security issue
+    url: https://github.com/mitsuakki/blog/blob/main/SECURITY.md
+    about: Do NOT open a public issue. See the security policy.
+  - name: Question / discussion
+    url: https://github.com/mitsuakki/blog/discussions
+    about: Use Discussions for open-ended questions or ideas.

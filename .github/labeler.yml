@@ -1,0 +1,31 @@
+# Auto-label PRs based on changed files
+
+post:
+  - changed-files:
+      - any-glob-to-any-file: _posts/**
+
+layout:
+  - changed-files:
+      - any-glob-to-any-file: _layouts/**
+      - any-glob-to-any-file: _includes/**
+
+style:
+  - changed-files:
+      - any-glob-to-any-file: assets/css/**
+      - any-glob-to-any-file: assets/**
+
+config:
+  - changed-files:
+      - any-glob-to-any-file: _config.yml
+      - any-glob-to-any-file: Gemfile
+      - any-glob-to-any-file: .github/**
+
+french:
+  - changed-files:
+      - any-glob-to-any-file: fr/**
+
+docs:
+  - changed-files:
+      - any-glob-to-any-file: README.md
+      - any-glob-to-any-file: CONTRIBUTING.md
+      - any-glob-to-any-file: SECURITY.md

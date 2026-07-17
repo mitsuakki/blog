@@ -1,0 +1,42 @@
+# Spell checker configuration. Runs in CI
+# https://github.com/crate-ci/typos
+
+[default]
+extend-ignore-re = [
+  # Hex addresses and offsets
+  "0x[0-9a-fA-F]+",
+  # Register names
+  "(?i)\\b(eax|ebx|ecx|edx|esi|edi|esp|ebp|rax|rbx|rcx|rdx|rsi|rdi|rsp|rbp)\\b",
+  # RE tool names
+  "(?i)\\b(ghidra|x64dbg|ollydbg|radare|angr|capstone|unicorn|keystone)\\b",
+]
+
+[default.extend-identifiers]
+# Common RE / dev terms
+deobfninja = "deobfninja"
+deobfuscation = "deobfuscation"
+obfuscator = "obfuscator"
+obfuscators = "obfuscators"
+mlil = "mlil"
+r2mcp = "r2mcp"
+r2pm = "r2pm"
+r2ghidra = "r2ghidra"
+apktool = "apktool"
+MCP = "MCP"
+NasM = "NasM"
+Ghidra = "Ghidra"
+ghidra = "ghidra"
+radare = "radare"
+AFL = "AFL"
+mitsuakki = "mitsuakki"
+ENSC = "ENSC"
+BdxINP = "BdxINP"
+
+[files]
+extend-exclude = [
+  "_site/",
+  ".jekyll-cache/",
+  "vendor/",
+  "Gemfile.lock",
+  ".git/",
+]

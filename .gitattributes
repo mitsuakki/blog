@@ -1,0 +1,41 @@
+# Auto-detect text files, normalize to LF
+* text=auto eol=lf
+
+# Explicit binary types
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.gz   binary
+*.zip  binary
+*.7z   binary
+*.bz2  binary
+
+# Code
+*.rb      text diff=ruby
+*.py      text diff=python
+*.c       text diff=c
+*.cpp     text diff=cpp
+*.h       text diff=c
+*.hpp     text diff=cpp
+*.js      text diff=javascript
+*.json    text
+*.yml     text
+*.yaml    text
+*.md      text diff=markdown
+*.html    text diff=html
+*.css     text diff=css
+*.scss    text diff=css
+*.xml     text
+*.svg     text
+*.sh      text eol=lf diff=shell
+*.bash    text eol=lf diff=shell
+
+# Lockfile
+Gemfile.lock text
+
+# Jekyll
+_config.yml text
+CNAME     text

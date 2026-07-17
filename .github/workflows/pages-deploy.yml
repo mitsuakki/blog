@@ -1,0 +1,56 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '_posts/**'
+      - '_layouts/**'
+      - '_includes/**'
+      - 'assets/**'
+      - '*.html'
+      - '*.md'
+      - '_config.yml'
+      - 'Gemfile'
+      - 'fr/**'
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow Pages deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Build site
+        run: bundle exec jekyll build --future
+        env:
+          JEKYLL_ENV: production
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site/
+
+      - uses: actions/deploy-pages@v4
+        id: deployment

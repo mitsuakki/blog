@@ -1,0 +1,28 @@
+# Link checker configuration. Runs in CI
+# https://github.com/lycheeverse/lychee
+
+cache = true
+max_cache_age = "1d"
+max_redirects = 5
+max_retries = 2
+timeout = 20
+accept = ["200", "301", "302", "307", "308", "429"]
+method = "get"
+
+# Don't check these. They rate-limit, require auth, or are social links
+exclude = [
+  "^mailto:",
+  "^https://twitter.com/",
+  "^https://x.com/",
+  "^https://linkedin.com/",
+  "^https://www.linkedin.com/",
+  "^https://github.com/.*/settings/",
+  "^https://github.com/.*/security/",
+  "github.com/mitsuakki.gpg$",
+  "localhost",
+  "127.0.0.1",
+]
+
+# Ignore false positives from anchors on GitHub-readme sites
+exclude_all_private = true
+include_verbatim = false
