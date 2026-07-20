@@ -23,7 +23,7 @@ lang: en
   <dd>Docker-based RE lab. Ghidra, radare2, angr + shell, exposed as MCP servers for AI agents. 5 specialized Claude Code agents included.</dd>
 
   <dt><a href="https://github.com/mitsuakki/x86-kernel">x86-kernel</a></dt>
-  <dd>From-scratch x86_64 kernel. Bare metal, NASM, QEMU. No AI used — written to learn.</dd>
+  <dd>From-scratch x86_64 kernel. Bare metal, NASM, QEMU. No AI used. Written to learn.</dd>
 
   <dt><a href="https://github.com/sarumc/bds-sdk-generator">bds-sdk-generator</a> <span class="badge badge-yellow">archived</span></dt>
   <dd>Reconstructing PDB symbols into compilable C headers for Bedrock Dedicated Server modding.</dd>

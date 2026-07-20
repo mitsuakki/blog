@@ -5,9 +5,9 @@ tags: [mcp, ghidra, radare2, docker, ai-agents, tooling]
 lang: en
 ---
 
-I got tired of switching windows. Disassemble in one terminal, decompile in
-another, grep xrefs somewhere else, then shell out for `strings` or `checksec`.
-Every tool has its own CLI, its own output format, its own annoyances.
+I got tired of switching windows. Disassemble in one terminal. Decompile in
+another. Grep xrefs somewhere else. Shell out for `strings` or `checksec`.
+Every tool has its own CLI. Its own output format. Its own annoyances.
 
 So I built [reverse-mcp](https://github.com/mitsuakki/reverse-mcp). One Docker
 container. Ghidra, radare2, angr, and a shell. All exposed as MCP servers behind
@@ -33,8 +33,8 @@ call away.
 
 ### The gateway
 
-`gateway.py`, port 3100. Spawns each MCP back-end as a child process,
-composites their tools into one namespace. Each back-end gets a prefix:
+`gateway.py`, port 3100. Each back-end runs as a child process. The gateway
+merges their tools into one namespace. Each back-end gets a prefix:
 
 | Prefix | Back-end | What you get |
 |--------|----------|--------------|

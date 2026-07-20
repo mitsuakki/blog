@@ -5,21 +5,21 @@ tags: [binaryninja, c++, deobfuscation, plugin-dev, deobfninja]
 lang: en
 ---
 
-Binary Ninja's C++ API is kind of a hidden gem. Everyone defaults to Python
-because it's easy. But deobfuscation means iterating over every instruction
-in a function, pattern matching against obfuscator signatures, rewriting IL.
-Python just dies. Especially on real binaries.
+Nobody talks about BN's C++ API. Everyone defaults to Python. It's easy.
+Deobfuscation means iterating over every instruction in a function. Pattern
+matching against obfuscator signatures. Rewriting IL. Python dies. Especially
+on real binaries.
 
 So I wrote [deobfninja](https://github.com/mitsuakki/deobfninja) in C++.
 
 ## Why not Python
 
 The Python API is fine for quick scripts. I still use it for one-off analysis.
-But deobfuscation is one of those problems where you feel every millisecond
-of interpreter overhead.
+But deobfuscation makes you feel every millisecond. The interpreter overhead
+adds up fast.
 
 C++ gives you direct access to BN's IL. No GIL, so you parallelize across
-functions. Zero-copy buffer manipulation for pattern matching. On a 5 MB binary
+functions. Zero-copy buffers for the pattern matcher. On a 5 MB binary
 with moderate obfuscation, the C++ plugin runs in under a second. The Python
 equivalent took 42 seconds.
 
@@ -69,8 +69,9 @@ public:
 {% endhighlight %}
 
 All detectors get chained. Every function gets piped through every detector.
-Match → rewrite → next. Dead simple, but composing detectors is where
-the interesting stuff happens.
+Match. Rewrite. Next. Simple. But composing detectors is where you hit walls.
+Remove opaque predicates before untangling CFF and the state variable trace
+breaks.
 
 ### Control flow flattening
 
@@ -100,14 +101,14 @@ bool CFFDetector::match(mlil_inst inst) {
 }
 {% endhighlight %}
 
-`traceStateVariable` is the fun part. You follow the state value backwards
+`traceStateVariable` is the hard part. You follow the state value backwards
 through phi nodes, which gets messy when the obfuscator sprinkles in fake
 assignments. I do a simple use-def walk, bail when I hit a constant or
 function argument. Works most of the time.
 
 ### Recipes
 
-Not everything fits a template. Some people hit custom protectors. So there's
+Not everything fits a template. Sometimes you run into custom protectors. So there's
 a recipe system: JSON files describing a deobfuscation pass. No recompilation.
 
 ```json
@@ -121,7 +122,7 @@ a recipe system: JSON files describing a deobfuscation pass. No recompilation.
 ```
 
 The engine runs up to `max_iterations` passes. Some transforms only make sense
-after a previous layer gets peeled. Run MBA simplification before CFF untangling
+after you peel the previous layer. Run MBA simplification before CFF untangling
 and the output is garbage. Order matters a lot.
 
 ## Build setup
