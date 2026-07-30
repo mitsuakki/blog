@@ -1,0 +1,50 @@
+---
+layout: default
+---
+
+<article class="post">
+  <header class="post-header">
+    <h1>
+      {{ page.title }}
+      {% unless page.archived %}
+      {% if page.sync_status == "new" %}
+      <span class="badge badge-green">NEW</span>
+      {% elsif page.sync_status == "updated" %}
+      <span class="badge badge-yellow">UPDATED</span>
+      {% endif %}
+      {% endunless %}
+      {% if page.archived %}
+      <span class="badge badge-red">ARCHIVED</span>
+      {% endif %}
+    </h1>
+    <div class="post-meta">
+      <a href="{{ page.repo_url }}" class="repo-link">
+        <code>{{ page.repo }}</code>
+      </a>
+      <span>&#9733; {{ page.stars }}</span>
+      {% if page.language %}
+      <span class="badge badge-blue">{{ page.language }}</span>
+      {% endif %}
+      {% if page.topics %}
+      <span class="post-tags">
+        {% for tag in page.topics %}
+        <code>{{ tag }}</code>
+        {% endfor %}
+      </span>
+      {% endif %}
+    </div>
+    <p class="repo-desc">{{ page.description }}</p>
+  </header>
+
+  <div class="post-content">
+    {{ content }}
+  </div>
+
+  <hr>
+
+  <p style="font-size: 0.85rem; color: var(--fg-muted);">
+    synced from
+    <a href="{{ page.repo_url }}">{{ page.repo }}</a>
+    &middot; last updated {{ page.updated | date: "%Y-%m-%d" }}
+  </p>
+</article>

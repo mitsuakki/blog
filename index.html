@@ -39,3 +39,18 @@ lang: en
   </ul>
   {% endif %}
 </section>
+
+{% if site.popular_tags.size > 0 %}
+<section style="margin-top: 2rem;">
+  <h2 style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--fg-dim); margin-bottom: 0.75rem; text-transform: lowercase;">popular tags</h2>
+  <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+  {% for t in site.popular_tags limit: 10 %}
+    {% assign tag = t.name %}
+    {% assign count = t.count %}
+    <a href="/blog/tag/{{ tag | slugify }}/" class="tag-link">
+      {{ tag }} <span style="color: var(--fg-muted); font-size: 0.68rem;">{{ count }}</span>
+    </a>
+  {% endfor %}
+  </div>
+</section>
+{% endif %}

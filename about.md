@@ -53,7 +53,11 @@ lang: en
   </tbody>
 </table>
 
-## elsewhere
+## currently
+
+Learning how CPUs work from the metal up. Building an x86_64 kernel without looking at Linux source first. Getting better at reading disassembly faster than the obfuscator can hide it.
+
+Always looking for the next hard problem.
 
 - GitHub: [mitsuakki](https://github.com/mitsuakki)
 - LinkedIn: [alexis-dauge](https://linkedin.com/in/alexis-dauge)

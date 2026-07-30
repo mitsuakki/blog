@@ -7,15 +7,29 @@ layout: default
     <h1>{{ page.title }}</h1>
     <div class="post-meta">
       <span class="post-date">{{ page.date | date: "%Y-%m-%d" }}</span>
+      <span class="post-reading-time">
+        {% assign words = content | strip_html | number_of_words %}
+        {% assign mins = words | divided_by: 200 | plus: 1 %}
+        {{ mins }} min read
+      </span>
       {% if page.tags %}
       <span class="post-tags">
         {% for tag in page.tags %}
-        <code>{{ tag }}</code>
+        <a href="/blog/tag/{{ tag | slugify }}/"><code>{{ tag }}</code></a>
         {% endfor %}
       </span>
       {% endif %}
     </div>
   </header>
+
+  {% if page.toc != false %}
+  <nav class="toc" id="toc">
+    <details>
+      <summary>table of contents</summary>
+      <div class="toc-list" id="toc-list"></div>
+    </details>
+  </nav>
+  {% endif %}
 
   <div class="post-content">
     {{ content }}
@@ -30,3 +44,50 @@ layout: default
   <a class="next" href="{{ page.next.url | relative_url }}">{{ page.next.title }} &rarr;</a>
   {% endif %}
 </nav>
+
+{% assign related = "" | split: "" %}
+{% for post in site.posts %}
+  {% if post.url != page.url %}
+    {% assign shared = 0 %}
+    {% for tag in post.tags %}
+      {% if page.tags contains tag %}
+        {% assign shared = shared | plus: 1 %}
+      {% endif %}
+    {% endfor %}
+    {% if shared >= 1 %}
+      {% assign related = related | push: post %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% if related.size >= 1 %}
+<section class="related-posts" style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+  <h2 style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--fg-dim); margin-bottom: 1rem;">related posts</h2>
+  <ul style="list-style: none; margin: 0;">
+  {% for rel in related limit: 3 %}
+    <li style="margin-bottom: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem;">
+      <span style="color: var(--fg-muted); font-size: 0.75rem;">{{ rel.date | date: "%Y-%m-%d" }}</span>
+      <a href="{{ rel.url | relative_url }}">{{ rel.title }}</a>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<script>
+// Generate TOC from h2/h3 in post content
+(function() {
+  var toc = document.getElementById('toc-list');
+  if (!toc) return;
+  var headings = document.querySelectorAll('.post-content h2, .post-content h3');
+  if (headings.length < 2) { document.getElementById('toc').style.display = 'none'; return; }
+  var html = '<ul style="list-style:none;margin:0.5rem 0 0 0;padding:0;">';
+  headings.forEach(function(h) {
+    if (!h.id) h.id = h.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    var indent = h.tagName === 'H3' ? ' style="padding-left:1.2rem;"' : '';
+    html += '<li' + indent + '><a href="#' + h.id + '" style="font-size:0.82rem;">' + h.textContent + '</a></li>';
+  });
+  html += '</ul>';
+  toc.innerHTML = html;
+})();
+</script>

@@ -1,0 +1,25 @@
+---
+layout: default
+---
+
+<section class="post-list">
+  <h2>posts tagged: <code style="background:none;padding:0;font-size:inherit;">{{ page.tag }}</code></h2>
+  <p style="color: var(--fg-muted); font-family: var(--font-mono); font-size: 0.8rem; margin-bottom: 1.5rem;">
+    {{ page.posts.size }} post{% if page.posts.size != 1 %}s{% endif %}
+  </p>
+  <ul>
+  {% for post in page.posts %}
+    <li class="post-entry">
+      <span class="post-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      {% if post.tags %}
+      <span class="post-tags">
+        {% for t in post.tags limit: 3 %}
+        <code class="post-tag">{{ t }}</code>
+        {% endfor %}
+      </span>
+      {% endif %}
+    </li>
+  {% endfor %}
+  </ul>
+</section>

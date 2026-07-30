@@ -21,6 +21,12 @@ kramdown:
 
 permalink: /:title/
 
+# Collections
+collections:
+  projects:
+    output: true
+    permalink: /projects/:path/
+
 # Defaults
 defaults:
   - scope:
@@ -28,6 +34,11 @@ defaults:
       type: "posts"
     values:
       layout: post
+  - scope:
+      path: ""
+      type: "projects"
+    values:
+      layout: project
   - scope:
       path: ""
     values:
@@ -39,8 +50,10 @@ exclude:
   - Gemfile.lock
   - README.md
   - vendor/
+  - _scripts/
 
 # GitHub Pages gems
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
+  - kramdown-parser-gfm
