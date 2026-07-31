@@ -340,7 +340,7 @@ def main
     if is_kernel
       # x86-kernel: milestones only, no project page
       puts "milestones only"
-      milestone_posts.concat(sync_milestones(full_name, repo, branch: "m1-boot"))
+      milestone_posts.concat(sync_milestones(full_name, repo, branch: "main"))
       next
     end
 
