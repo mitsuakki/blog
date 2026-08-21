@@ -7,5 +7,8 @@
   "sarumc/bds-sdk-generator/readme": "6623b026ea0051651b55b0f48b34134b6e003dd5",
   "sarumc/orchestrator/readme": "d88797e5ea90a413d30e145c72b7074bb54da06c",
   "bedrock-v/Vedrock/readme": "4adecce1efc7c9900aa4494abcfe369949cf6f98",
-  "sarumc/docker-base/readme": "23d45806907eb3b9960d641fc3bc3fc8cd4e5f5f"
+  "sarumc/docker-base/readme": "23d45806907eb3b9960d641fc3bc3fc8cd4e5f5f",
+  "mitsuakki/baremetal-x86_64-kernel/readme": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+  "sarumc/discord/readme": "e4d2185a553156cba5aad798c0110881037d3ba6",
+  "sarumc/deployement/readme": "c26055b98b59d74e51dd459d9b4e16494b25783e"
 }
