@@ -228,14 +228,14 @@ def sync_milestones(repo_full_name, repo_data, branch: nil)
     frontmatter = <<~YAML
       ---
       layout: post
-      title: "[x86-kernel] #{title}"
+      title: "[baremetal-x86_64-kernel] #{title}"
       tags: [x86-kernel, milestone, kernel, osdev]
       repo: "#{repo_full_name}"
       lang: en
       date: #{post_date}
       ---
 
-      _Milestone from [x86-kernel](#{repo_data["html_url"]}) -- bare-metal x86_64 kernel written from scratch, no AI used._
+      _Milestone from [baremetal-x86_64-kernel](#{repo_data["html_url"]}) -- bare-metal x86_64 kernel written from scratch, no AI used._
 
     YAML
 
@@ -335,7 +335,7 @@ def main
     repo_key = "#{full_name}/readme"
     print "  #{full_name} ... "
 
-    is_kernel = (repo["name"] == "x86-kernel" || repo["name"] == "x86_kernel")
+    is_kernel = (repo["name"] == "baremetal-x86_64-kernel")
 
     if is_kernel
       # x86-kernel: milestones only, no project page
