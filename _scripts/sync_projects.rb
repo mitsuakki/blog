@@ -228,18 +228,18 @@ def sync_milestones(repo_full_name, repo_data, branch: nil)
     frontmatter = <<~YAML
       ---
       layout: post
-      title: "[baremetal-x86_64-kernel] #{title}"
+      title: "[baremetal-kernel] #{title}"
       tags: [x86-kernel, milestone, kernel, osdev]
       repo: "#{repo_full_name}"
       lang: en
       date: #{post_date}
       ---
 
-      _Milestone from [baremetal-x86_64-kernel](#{repo_data["html_url"]}) -- bare-metal x86_64 kernel written from scratch, no AI used._
+      _Milestone from [baremetal-kernel](#{repo_data["html_url"]}) -- bare-metal x86_64 kernel written from scratch, no AI used._
 
     YAML
 
-    fname = "#{post_date}-x86-kernel-#{milestone_name}.md"
+    fname = "#{post_date}-kernel-#{milestone_name}.md"
     path = File.join(POSTS_DIR, fname)
     File.write(path, frontmatter + "\n" + body)
     puts "  [+] wrote milestone post: #{fname}"
@@ -328,14 +328,14 @@ def main
   no_readme = 0
 
   # Clean old milestone posts so removed milestones disappear
-  Dir.glob(File.join(POSTS_DIR, "*-x86-kernel-*.md")).each { |f| FileUtils.rm(f) }
+  Dir.glob(File.join(POSTS_DIR, "*-x86-*.md")).each { |f| FileUtils.rm(f) }
 
   active.each do |repo|
     full_name = repo["full_name"]
     repo_key = "#{full_name}/readme"
     print "  #{full_name} ... "
 
-    is_kernel = (repo["name"] == "baremetal-x86_64-kernel")
+    is_kernel = (repo["name"] == "baremetal-kernel")
 
     if is_kernel
       # x86-kernel: milestones only, no project page
