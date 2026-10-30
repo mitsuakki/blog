@@ -13,5 +13,7 @@
   "sarumc/deployement/readme": "c26055b98b59d74e51dd459d9b4e16494b25783e",
   "sarumc/database/readme": "8a0470e61d481693d788a17f3d76ae1d8ae83af9",
   "mitsuakki/x86_64-kernel/readme": "cdb4574db116e387c23286b02541789cef96b369",
-  "mitsuakki/baremetal-cnn/readme": "82d915c87cbae9738d9c0c89f4766e701f56b584"
+  "mitsuakki/baremetal-cnn/readme": "82d915c87cbae9738d9c0c89f4766e701f56b584",
+  "mitsuakki/leetcode/readme": "36336d3835fb61f99bc0b6f40dd159a20144417a",
+  "sarumc/minestrate/readme": "d88797e5ea90a413d30e145c72b7074bb54da06c"
 }
